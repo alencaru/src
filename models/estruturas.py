@@ -3,10 +3,10 @@ from datetime import datetime, time, timedelta
 from pydantic import BaseModel
 #---------------------------------------------------------------------
 
-sqlite_file_name = "database3.db"
+sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///data/{sqlite_file_name}"
 connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, echo=True, connect_args=connect_args, extend_existing=True)
+engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
 
 #---------------------------------------------------------------------
 
