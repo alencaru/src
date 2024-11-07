@@ -2,9 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from sqlmodel import Field, Session, SQLModel, create_engine, select
-import time
+import time as tm
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from loguru import logger
 from pydantic import BaseModel
 from pandas_to_pydantic import dataframe_to_pydantic
@@ -14,6 +14,7 @@ import os
 import sys
 import pathlib
 import json
+from pathlib import Path
 
 import functions.data_etl as etl
 from models.estruturas import tb_registro, tb_falta_agua
@@ -53,10 +54,10 @@ options.add_argument('--disable-dev-shm-usage')
 wd = webdriver.Chrome(service=service, options=options)
 wd.get(url)
 wd.find_element(By.XPATH, elem_xpath)
-time.sleep(1)
+tm.sleep(1)
 
 html = wd.page_source
-time.sleep(1)
+tm.sleep(1)
 
 table = pd.read_html(html)
 
@@ -90,11 +91,11 @@ if firstlinetable == "Faltas de Água não encontradas":
 else:
   information = 'Infos de falta de agua coletados e salvos emn arquivo csv'
   logger.debug(information)
-  table[0].to_csv('src/data/data.csv', mode='a', header=False, encoding="utf-8") 
+  table[0].to_csv('data/data.csv', mode='a', header=False, encoding="utf-8") 
 
-  tb = etl.etl_process(df = table[0], tabela_ra_path='src/data/table_ra.csv')  # backup
+  tb = etl.etl_process(df = table[0], tabela_ra_path='data/table_ra.csv')  # backup
   
-  # colocar o loop da outra tabela caso tenho dados
+  # colocar o loop da outra tabela caso exista dados
 
   with Session(engine) as session:
     for _, row in tb.iterrows():
@@ -102,11 +103,11 @@ else:
         ide = row['ide'],
         ra =  row['ra'],
         end =  row['end'],
-        inicio =  row['inicio'],
-        fim =  row['fim'],
+        inicio = row['inicio'], #datetime.strptime(row['inicio'], "%Y-%m-%d %H:%M:%S"),
+        fim = row['fim'], #datetime.strptime(row['fim'], "%Y-%m-%d %H:%M:%S"),
         tipo = row['tipo'],
         motivo =  row['motivo'],
-        tempo = row['tempo'],
+        tempo = str(row['tempo']),
         hora_inicio = row['hora_inicio'],
         hora_fim = row['hora_fim'],
         mes = row['mes'],
@@ -124,3 +125,4 @@ logger.add('log.log')
 
 # end
 wd.quit()
+session.close()

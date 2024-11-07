@@ -10,10 +10,10 @@ def etl_process(df, tabela_ra_path):
 
     #df = pd.DataFrame([d.dict()])
     df["inicio"] = df["inicio"].str.replace(' às ', ' ').str.replace('h', ':')
-    df["inicio"] = pd.to_datetime(df["inicio"], format='%d/%m/%Y %H:%M')
+    df["inicio"] = pd.to_datetime(df["inicio"], format='%d/%m/%Y %H:%M:%S')
 
     df["fim"] = df["fim"].str.replace(' às ', ' ').str.replace('h', ':')
-    df["fim"] = pd.to_datetime(df["fim"], format='%d/%m/%Y %H:%M')
+    df["fim"] = pd.to_datetime(df["fim"], format='%d/%m/%Y %H:%M:%S')
 
     df["tempo"] = (df["fim"] - df["inicio"])
 
