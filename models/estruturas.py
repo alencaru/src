@@ -17,8 +17,8 @@ class tb_falta_agua(SQLModel, table=True):
   ide: str | None
   ra: str | None
   end: str | None
-  inicio: datetime | None
-  fim: datetime | None
+  inicio: str | None # datetime | None
+  fim: str | None #datetime | None
   tipo: str | None
   motivo: str | None
   tempo: str | None 
