@@ -17,8 +17,8 @@ class tb_falta_agua(SQLModel, table=True):
   ide: str | None
   ra: str | None
   end: str | None
-  inicio: str | None # datetime | None
-  fim: str | None #datetime | None
+  inicio: datetime | None
+  fim: datetime | None
   tipo: str | None
   motivo: str | None
   tempo: str | None 
@@ -28,7 +28,7 @@ class tb_falta_agua(SQLModel, table=True):
   ano: str | None 
   ra_num: int | None 
   CD_SUBDIST: int | None
-  data_regristro: str | None #datetime | None #datetime | None
+  data_regristro: str | None #datetime | None
   class Config:
         table_args = {"extend_existing": True}
 

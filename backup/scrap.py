@@ -28,7 +28,7 @@ logger.info('Script iniciado')
 # database 
 
 sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///src/data/{sqlite_file_name}"
+sqlite_url = f"sqlite:///data/{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
@@ -98,13 +98,6 @@ else:
   # colocar o loop da outra tabela caso exista dados
 
   with Session(engine) as session:
-    td = tb_falta_agua(**tb)
-    session.add(td)
-    session.commit()
-    session.refresh(td)
-
-'''
-  with Session(engine) as session:
     for _, row in tb.iterrows():
       td = tb_falta_agua(
         ide = row['ide'],
@@ -120,12 +113,19 @@ else:
         mes = row['mes'],
         ano = row['ano'],
         ra_num = row['ra_num'],
-        CD_SUBDIST = int | None,
+        CD_SUBDIST = row['CD_SUBDIST'],
         data_regristro = date.strftime('%d/%m/%Y')
       )
       session.add(td)
     session.commit()
 '''
+  with Session(engine) as session:
+    td = tb_falta_agua(**tb)
+    session.add(td)
+    session.commit()
+    session.refresh(td)
+'''
+
 # final logger
 logger.info('Script finalizado')
 logger.add('log.log')
